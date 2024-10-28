@@ -28,11 +28,11 @@ public class AuthService {
     }
 
     public AuthResponse login(LoginRequest login) {
-        UserDetails userDetails = iUserRepository.findByUsername(login.getUsername())
+        UserDetails userDetails = iUserRepository.findByEmail(login.getIdentifier())
                 .orElseThrow(() -> new UsernameNotFoundException("User doesn't exist"));
 
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(login.getUsername(), login.getPassword()));
+                new UsernamePasswordAuthenticationToken(login.getIdentifier(), login.getPassword()));
 
         String token = jwtService.getTokenService(userDetails);
 

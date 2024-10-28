@@ -12,9 +12,6 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "userId")
-    private Long userId;
-
     @Column(name = "amount")
     private Double amount;
 
@@ -24,12 +21,12 @@ public class Transaction {
     @Column(name = "date")
     private LocalDateTime date;
 
-    public Transaction(Long id, Long userId, Double amount, String type, LocalDateTime date) {
+    public Transaction(Long id, Double amount, String type, LocalDateTime date, User user) {
         this.id = id;
-        this.userId = userId;
         this.amount = amount;
         this.type = type;
         this.date = date;
+        this.user = user;
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -42,10 +39,6 @@ public class Transaction {
 
     public Long getId() {
         return id;
-    }
-
-    public Long getUserId() {
-        return userId;
     }
 
     public Double getAmount() {
@@ -62,10 +55,6 @@ public class Transaction {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
     }
 
     public void setAmount(Double amount) {

@@ -1,11 +1,8 @@
 package com.hackathon.bankingapp.services;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -30,8 +27,8 @@ class UserServiceTest {
     @Test
     public void test_Get_All_Users() {
         List<User> mockUsers = new ArrayList<>();
-        mockUsers.add(new User(1L,  "Jacky", "user1@example.com", "password1", ERole.USER));
-        mockUsers.add(new User(2L,  "Fran", "user2@example.com", "password1", ERole.USER));
+        mockUsers.add(new User(1L, "Jacky", "user1@example.com", "password1", "Address", 123456789, "1234567890", "1234", ERole.USER));
+        mockUsers.add(new User(2L, "Fran", "user2@example.com", "password2", "Address2", 987654321, "0987654321", "4321", ERole.ADMIN));
 
         when(iUserRepository.findAll()).thenReturn(mockUsers);
 
@@ -47,37 +44,35 @@ class UserServiceTest {
 
     @Test
     public void test_Get_User_By_Id() {
-        User mockUser = new User(1L, "Jacky", "user1@example.com", "password1", ERole.USER);
-        Long userId = 1L;
+        User mockUser = new User(1L, "Mary", "user1@example.com", "password1", "Address", 123456789, "1234567890", "1234", ERole.USER);
 
-        when(iUserRepository.findById(userId)).thenReturn(Optional.of(mockUser));
+        when(iUserRepository.findById(mockUser.getId())).thenReturn(Optional.of(mockUser));
 
-        Optional<User> result = userService.getUserById(userId);
+        Optional<User> result = userService.getUserById(mockUser.getId());
 
         assertTrue(result.isPresent());
-        assertEquals("Jacky", result.get().getUsername());
+        assertEquals("Mary", result.get().getUsername());
 
-        verify(iUserRepository, times(1)).findById(userId);
+        verify(iUserRepository, times(1)).findById(mockUser.getId());
     }
 
     @Test
     public void test_Create_User() {
-        User newUser = new User(1L, "Jacky", "user1@example.com", "password1", ERole.USER);
+        User newUser = new User(1L, "Mary", "user1@example.com", "password1", "Address", 123456789, "1234567890", "1234", ERole.USER);
 
         when(iUserRepository.save(newUser)).thenReturn(newUser);
 
         User result = userService.createUser(newUser);
 
         assertNotNull(result);
-        assertEquals("Jacky", result.getUsername());
+        assertEquals("Mary", result.getUsername());
 
         verify(iUserRepository, times(1)).save(newUser);
     }
 
     @Test
     public void test_Update_User() {
-
-        User user = new User(1L, ERole.USER, "password1","user1@example.com", "Jacky");
+        User user = new User(1L, "Mary", "user1@example.com", "password1", "Address", 123456789, "1234567890", "1234", ERole.USER);
 
         userService.updateUser(user);
 
@@ -86,8 +81,9 @@ class UserServiceTest {
 
     @Test
     public void test_Delete_User_Success() {
-
         Long userId = 1L;
+
+        doNothing().when(iUserRepository).deleteById(userId);
 
         String result = userService.deleteUser(userId);
 
@@ -98,8 +94,8 @@ class UserServiceTest {
 
     @Test
     public void test_Delete_if_Users_Not_Found() {
-
         Long userId = 1L;
+
         doThrow(new RuntimeException("User not found")).when(iUserRepository).deleteById(userId);
 
         String result = userService.deleteUser(userId);

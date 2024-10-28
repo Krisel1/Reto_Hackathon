@@ -19,7 +19,6 @@ public class RoboAdvisorService {
         String type = random.nextBoolean() ? "BUY" : "SELL";
 
         Transaction transaction = new Transaction();
-        transaction.setUserId(userId);
         transaction.setAmount(simulatedAmount);
         transaction.setType(type);
         transaction.setDate(LocalDateTime.now());

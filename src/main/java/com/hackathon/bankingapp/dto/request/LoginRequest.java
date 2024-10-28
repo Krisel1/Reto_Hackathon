@@ -1,18 +1,18 @@
 package com.hackathon.bankingapp.dto.request;
 
 public class LoginRequest {
-    String username;
+    String identifier;
     String password;
 
     public LoginRequest() {
     }
 
-    public LoginRequest(String username, String password) {
-        this.username = username;
+    public LoginRequest(String identifier, String password) {
+        this.identifier = identifier;
         this.password = password;
     }
     private LoginRequest(Builder builder) {
-        this.username = builder.username;
+        this.identifier = builder.identifier;
         this.password = builder.password;
     }
 
@@ -20,16 +20,16 @@ public class LoginRequest {
         return password;
     }
 
-    public String getUsername() {
-        return username;
+    public String getIdentifier() {
+        return identifier;
     }
 
     public static class Builder {
-        private String username;
+        private String identifier;
         private String password;
 
-        public Builder username(String username) {
-            this.username = username;
+        public Builder identifier(String identifier) {
+            this.identifier = identifier;
             return this;
         }
 
@@ -50,13 +50,13 @@ public class LoginRequest {
 
         LoginRequest that = (LoginRequest) o;
 
-        if (!username.equals(that.username)) return false;
+        if (!identifier.equals(that.identifier)) return false;
         return password.equals(that.password);
     }
 
     @Override
     public int hashCode() {
-        int result = username.hashCode();
+        int result = identifier.hashCode();
         result = 31 * result + password.hashCode();
         return result;
     }
@@ -64,7 +64,7 @@ public class LoginRequest {
     @Override
     public String toString() {
         return "LoginRequest{" +
-                "username='" + username + '\'' +
+                "username='" + identifier + '\'' +
                 ", password='" + password + '\'' +
                 '}';
     }

@@ -20,34 +20,40 @@ public class User implements UserDetails{
 
     @Column(nullable = false)
     private String username;
-
     private String email;
     private String password;
+    private String address;
+    private int phoneNumber;
+    private String accountNumber;
     private String pin;
 
     @Enumerated(EnumType.STRING)
     private ERole role;
 
-    public User(Long id, String username, String email, String password, ERole role) {
+    public User(Long id, String username, String email, String password, String address, int phoneNumber, String accountNumber, String pin, ERole role) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.accountNumber = accountNumber;
+        this.pin = pin;
         this.role = role;
     }
 
     public User() {
     }
 
-    public User(long l, String password1, String mail, String jacky) {
+    public User(long id, String fran, String mail, String password1, String address, int phoneNumber, String accountNumber, ERole role) {
+    }
+
+    public User(long l, ERole user, String password1, String mail, String krisel) {
     }
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference("transaction-user")
     private Set<Transaction> transactions;
-
-    public User(Long id, ERole role, String password, String email, String username) {
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -131,11 +137,39 @@ public class User implements UserDetails{
         this.pin = pin;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public int getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(int phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
+    }
+
     public static class Builder {
         private Long id;
         private String username;
         private String email;
         private String password;
+        private String address;
+        private int phoneNumber;
+        private String accountNumber;
+        private String pin;
         private ERole role;
 
         public Builder id(Long id) {
@@ -158,16 +192,34 @@ public class User implements UserDetails{
             return this;
         }
 
+        public Builder address(String address) {
+            this.address = address;
+            return this;
+        }
+
+        public Builder phoneNumber(int phoneNumber) {
+            this.phoneNumber = phoneNumber;
+            return this;
+        }
+
+        public Builder accountNumber(String accountNumber) {
+            this.accountNumber = accountNumber;
+            return this;
+        }
+
+        public Builder pin(String pin) {
+            this.pin = pin;
+            return this;
+        }
+
         public Builder role(ERole role) {
             this.role = role;
             return this;
         }
 
         public User build() {
-            return new User(id, role, password, email, username);
+            return new User(id, username, email, password, address, phoneNumber, accountNumber, pin, role);
 
         }
-
-
     }
 }

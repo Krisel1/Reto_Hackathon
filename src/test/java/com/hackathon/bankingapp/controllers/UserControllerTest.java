@@ -14,7 +14,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.ArrayList;
 import java.util.Optional;
-import static com.hackathon.bankingapp.models.ERole.USER;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
@@ -32,30 +31,35 @@ class UserControllerTest {
     private MockMvc mockMvc;
 
     private User user1;
-    private User user2;
+
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
 
-        user1 = new User(1L, ERole.USER, "password1", "user1@example.com", "Fran");
-        user2 = new User(2L, ERole.USER, "password2", "user2@example.com", "Jacky");
+        user1 = new User(1L, "Fran", "user1@example.com", "password1", "Spain", 624858987, "1234567890", "1234", ERole.USER);
     }
 
     @Test
     void test_Create_User() throws Exception {
-        User user = new User(1L, "Fran", "user1@example.com", "password1", ERole.USER);
+        User user1 = new User(1L, "Fran", "user1@example.com", "password1", "Spain", 624858987, "1234567890", "1234", ERole.USER);
 
-        when(userService.createUser(any(User.class))).thenReturn(user);
+        when(userService.createUser(any(User.class))).thenReturn(user1);
+
+        String userJson = "{\"username\":\"Fran\",\"email\":\"user1@example.com\",\"password\":\"password1\",\"address\":\"Spain\",\"phoneNumber\":624858987,\"accountNumber\":\"1234567890\",\"pin\":\"1234\",\"role\":\"USER\"}";
 
         mockMvc.perform(post("/api/users")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"id\":1,\"username\":\"Fran\",\"email\":\"user1@example.com\",\"password\":\"password1\",\"role\":\"USER\"}"))
-                .andExpect(status().isOk())
+                        .content(userJson))
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.username").value("Fran"))
                 .andExpect(jsonPath("$.email").value("user1@example.com"))
+                .andExpect(jsonPath("$.address").value("Spain"))
+                .andExpect(jsonPath("$.phoneNumber").value(624858987))
+                .andExpect(jsonPath("$.accountNumber").value("1234567890"))
+                .andExpect(jsonPath("$.pin").value("1234"))
                 .andExpect(jsonPath("$.role").value("USER"));
 
         verify(userService, times(1)).createUser(any(User.class));
@@ -77,7 +81,7 @@ class UserControllerTest {
 
     @Test
     void getUserById() throws Exception {
-        User user1 = new User(1L, "valen", "valen@example.com", "ROLE_USER");
+        User user1 = new User(1L, "Valen", "user2@example.com", "password2", "Spain", 123456789, "1234567890", "1234", ERole.USER);
         when(userService.getUserById(anyLong())).thenReturn(Optional.of(user1));
 
         String userJson = new ObjectMapper().writeValueAsString(user1);
@@ -91,7 +95,7 @@ class UserControllerTest {
     @Test
     public void test_Update_User() {
         Long id = 1L;
-        User user = user1 = new User(1L, USER, "password1", "user1@example.com", "Fran");
+        User user = user1 = new User(1L, "Sofia", "user2@example.com", "password2", "Spain", 987456321, "1234567890", "1234", ERole.USER);
         user.setId(id);
 
         userService.updateUser(user);

@@ -42,12 +42,10 @@ class AuthServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
-
     @Test
     public void test_Login_userNotFound() {
         String username = "unknownuser";
         String password = "password123";
-
         LoginRequest loginRequest = new LoginRequest(username, password);
 
         when(iUserRepository.findByUsername(username)).thenReturn(Optional.empty());
@@ -60,15 +58,14 @@ class AuthServiceTest {
 
     @Test
     public void test_Register_successful() {
-
         String username = "vicky";
         String email = "vicky@example.com";
         String password = "password123";
         String encodedPassword = "encodedPassword123";
         String token = "new_generated_token";
-
         RegisterRequest registerRequest = new RegisterRequest(username, email, password, ERole.USER);
 
+        when(iUserRepository.findByUsername(username)).thenReturn(Optional.empty());
         when(passwordEncoder.encode(password)).thenReturn(encodedPassword);
         when(jwtService.getTokenService(any(UserDetails.class))).thenReturn(token);
 
@@ -84,14 +81,13 @@ class AuthServiceTest {
 
     @Test
     public void test_Register_userAlreadyExists() {
-
         String username = "valen";
         String email = "valen@example.com";
         String password = "password123";
-
         RegisterRequest registerRequest = new RegisterRequest(username, email, password, ERole.USER);
 
-        when(iUserRepository.findByUsername(username)).thenReturn(Optional.of(new User(1L, ERole.USER, "password1", "user1@example.com", "Krisel")));
+        when(iUserRepository.findByUsername(username))
+                .thenReturn(Optional.of(new User(1L, "valen", email, password, "Address", 123456789, "1234567890", "1234", ERole.USER)));
 
         assertThrows(RuntimeException.class, () -> authService.register(registerRequest));
 
