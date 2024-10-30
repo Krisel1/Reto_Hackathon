@@ -21,18 +21,18 @@ public class Transaction {
     @Column(name = "date")
     private LocalDateTime date;
 
-    public Transaction(Long id, Double amount, String type, LocalDateTime date, User user) {
+    public Transaction(Long id, Double amount, String type, LocalDateTime date) {
         this.id = id;
         this.amount = amount;
         this.type = type;
         this.date = date;
-        this.user = user;
+
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    @JsonBackReference("transaction-user")
-    private User user;
+    @JoinColumn(name = "account_id", nullable = false)
+    private Account account;
+
 
     public Transaction() {
     }

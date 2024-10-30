@@ -45,12 +45,6 @@ public class User implements UserDetails{
     public User() {
     }
 
-    public User(long id, String fran, String mail, String password1, String address, int phoneNumber, String accountNumber, ERole role) {
-    }
-
-    public User(long l, ERole user, String password1, String mail, String krisel) {
-    }
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference("transaction-user")
     private Set<Transaction> transactions;
