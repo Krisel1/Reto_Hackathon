@@ -46,7 +46,6 @@ public class User implements UserDetails{
     }
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference("transaction-user")
     private Set<Transaction> transactions;
 
     @Override
