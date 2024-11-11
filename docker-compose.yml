@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8080:8080"
+      - "3000:3000"
     depends_on:
       - mysql
       - smtp
@@ -17,16 +17,21 @@ services:
       - finservice_network
     restart: always
 
+
   mysql:
     image: mysql:8.0
     environment:
       MYSQL_DATABASE: db_bankingapp
       MYSQL_PASSWORD: 1234
     ports:
-      - "3307:3306"
+      - "3306:3306"
     networks:
       - finservice_network
     restart: always
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      timeout: 10s
+      retries: 5
     
   smtp:
     image: mailhog/mailhog
